@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 你的自定义样式 */ 
+
+/* 自定义拖拽手柄样式 */
+.react-resizable-handle {
+  @apply w-4 h-4 absolute bg-white/20 rounded-full transition-colors;
+}
+
+.react-resizable-handle:hover {
+  @apply bg-white/40;
+}
+
+.react-resizable-handle::after {
+  @apply border-white/60;
+}
+
+/* 各个方向拖拽手柄的位置 */
+.react-resizable-handle-se {
+  @apply bottom-0 right-0 cursor-se-resize;
+}
+
+.react-resizable-handle-sw {
+  @apply bottom-0 left-0 cursor-sw-resize;
+}
+
+.react-resizable-handle-ne {
+  @apply top-0 right-0 cursor-ne-resize;
+}
+
+.react-resizable-handle-nw {
+  @apply top-0 left-0 cursor-nw-resize;
+}
+
+.react-resizable-handle-e {
+  @apply right-0 top-1/2 -translate-y-1/2 cursor-e-resize;
+}
+
+.react-resizable-handle-w {
+  @apply left-0 top-1/2 -translate-y-1/2 cursor-w-resize;
+}
+
+.react-resizable-handle-n {
+  @apply top-0 left-1/2 -translate-x-1/2 cursor-n-resize;
+}
+
+.react-resizable-handle-s {
+  @apply bottom-0 left-1/2 -translate-x-1/2 cursor-s-resize;
+} 
