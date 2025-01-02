@@ -1,0 +1,19 @@
+/* 可以添加到全局样式文件中 */
+.frosted-glass {
+  /* 基础样式 */
+  @apply relative overflow-hidden;
+  
+  /* 动画过渡 */
+  @apply transition-all duration-300;
+  
+  /* 毛玻璃效果 */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .frosted-glass {
+    @apply w-full;
+  }
+} 
