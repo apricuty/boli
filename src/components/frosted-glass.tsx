@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ResizableBox } from 'react-resizable';
 import { getImageList } from '../utils/imageUtils';
+import MenuBar from './MenuBar';
 import 'react-resizable/css/styles.css';
 
 export default function FrostedGlass() {
@@ -12,10 +13,39 @@ export default function FrostedGlass() {
   const [text, setText] = useState('点击这里编辑文字');
   const [isEditing, setIsEditing] = useState(false);
   
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [fontSize, setFontSize] = useState(24);
+  
   useEffect(() => {
-    const imageList = getImageList();
-    setImages(imageList);
+    try {
+      const imageList = getImageList();
+      if (imageList.length === 0) {
+        throw new Error('没有找到图片资源');
+      }
+      setImages(imageList);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '加载图片失败');
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        <p>错误: {error}</p>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        <p>加载中...</p>
+      </div>
+    );
+  }
 
   const handleNextImage = () => {
     if (currentIndex < images.length - 1) {
@@ -43,9 +73,20 @@ export default function FrostedGlass() {
     setIsEditing(false);
   };
 
+  const handleFontSizeChange = (size: number) => {
+    setFontSize(size);
+  };
+
   return (
     <div className="min-h-screen w-full relative overflow-hidden bg-black flex flex-col items-center justify-center p-4">
       <div className="w-4/5 relative rounded-xl overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 z-10">
+          <MenuBar 
+            fontSize={fontSize}
+            onFontSizeChange={handleFontSizeChange}
+          />
+        </div>
+
         {images.length > 0 && (
           <img 
             src={images[currentIndex].url} 
@@ -74,20 +115,22 @@ export default function FrostedGlass() {
                       value={text}
                       onChange={handleTextChange}
                       onBlur={handleEditComplete}
-                      className="w-full h-full bg-transparent text-white text-center resize-none border-none focus:outline-none focus:ring-0 text-2xl"
-                      autoFocus
-                      placeholder="输入你想要的文字..."
+                      className="w-full h-full bg-transparent text-white text-center resize-none border-none focus:outline-none focus:ring-0"
                       style={{ 
+                        fontSize: `${fontSize}px`,
                         background: 'transparent',
                         caretColor: 'white'
                       }}
+                      autoFocus
+                      placeholder="输入你想要的文字..."
                     />
                   ) : (
                     <div 
                       className="w-full h-full flex items-center justify-center cursor-text"
                       onClick={() => setIsEditing(true)}
                     >
-                      <p className="text-white text-2xl whitespace-pre-wrap break-words">
+                      <p className="text-white whitespace-pre-wrap break-words"
+                         style={{ fontSize: `${fontSize}px` }}>
                         {text}
                       </p>
                     </div>

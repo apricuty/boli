@@ -2,6 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 毛玻璃效果基础样式 */
+.frosted-glass {
+  @apply relative overflow-hidden transition-all duration-300;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .frosted-glass {
+    @apply w-full;
+  }
+  
+  /* 移动端调整拖拽手柄大小 */
+  .react-resizable-handle {
+    @apply w-6 h-6;
+  }
+  
+  /* 移动端文字大小调整 */
+  .text-2xl {
+    @apply text-xl;
+  }
+}
+
 /* 你的自定义样式 */ 
 
 /* 自定义拖拽手柄样式 */
@@ -48,4 +72,25 @@
 
 .react-resizable-handle-s {
   @apply bottom-0 left-1/2 -translate-x-1/2 cursor-s-resize;
+} 
+
+/* MenuBar 样式 */
+.menu-bar {
+  @apply backdrop-blur-md bg-black/30;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .menu-bar {
+    @apply px-2 py-1;
+  }
+  
+  .menu-bar button {
+    @apply w-6 h-6 text-sm;
+  }
+  
+  .menu-bar span {
+    @apply text-xs;
+  }
 } 

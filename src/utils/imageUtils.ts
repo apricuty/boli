@@ -5,17 +5,25 @@ const imageFiles = import.meta.glob('/public/images/*.*', {
 });
 
 export const getImageList = () => {
-  // 将对象转换为数组并排序
-  const images = Object.entries(imageFiles)
-    .map(([path, url]) => ({
-      path,
-      url: url as string,
-      // 从路径中提取文件名
-      name: path.split('/').pop() || ''
-    }))
-    .sort((a, b) => a.name.localeCompare(b.name));
+  try {
+    const images = Object.entries(imageFiles)
+      .filter(([path]) => isImageFile(path))
+      .map(([path, url]) => ({
+        path,
+        url: url as string,
+        name: path.split('/').pop() || ''
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
 
-  return images;
+    if (images.length === 0) {
+      throw new Error('未找到有效的图片文件');
+    }
+
+    return images;
+  } catch (error) {
+    console.error('加载图片列表失败:', error);
+    throw error;
+  }
 };
 
 // 支持的图片类型
