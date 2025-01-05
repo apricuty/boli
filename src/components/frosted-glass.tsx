@@ -16,6 +16,7 @@ export default function FrostedGlass() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [fontSize, setFontSize] = useState(24);
+  const [textAlign, setTextAlign] = useState<'left' | 'center' | 'right'>('center');
   
   useEffect(() => {
     try {
@@ -77,6 +78,10 @@ export default function FrostedGlass() {
     setFontSize(size);
   };
 
+  const handleAlignChange = (align: 'left' | 'center' | 'right') => {
+    setTextAlign(align);
+  };
+
   return (
     <div className="min-h-screen w-full relative overflow-hidden bg-black flex flex-col items-center justify-center p-4">
       <div className="w-4/5 relative rounded-xl overflow-hidden">
@@ -84,6 +89,8 @@ export default function FrostedGlass() {
           <MenuBar 
             fontSize={fontSize}
             onFontSizeChange={handleFontSizeChange}
+            textAlign={textAlign}
+            onAlignChange={handleAlignChange}
           />
         </div>
 
@@ -115,11 +122,12 @@ export default function FrostedGlass() {
                       value={text}
                       onChange={handleTextChange}
                       onBlur={handleEditComplete}
-                      className="w-full h-full bg-transparent text-white text-center resize-none border-none focus:outline-none focus:ring-0"
+                      className="w-full h-full bg-transparent text-white resize-none border-none focus:outline-none focus:ring-0"
                       style={{ 
                         fontSize: `${fontSize}px`,
                         background: 'transparent',
-                        caretColor: 'white'
+                        caretColor: 'white',
+                        textAlign: textAlign
                       }}
                       autoFocus
                       placeholder="输入你想要的文字..."
@@ -128,9 +136,14 @@ export default function FrostedGlass() {
                     <div 
                       className="w-full h-full flex items-center justify-center cursor-text"
                       onClick={() => setIsEditing(true)}
+                      style={{ textAlign: textAlign }}
                     >
                       <p className="text-white whitespace-pre-wrap break-words"
-                         style={{ fontSize: `${fontSize}px` }}>
+                         style={{ 
+                           fontSize: `${fontSize}px`,
+                           textAlign: textAlign,
+                           width: '100%'  // 确保文本能够按照对齐方式排列
+                         }}>
                         {text}
                       </p>
                     </div>
