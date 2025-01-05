@@ -3,6 +3,8 @@ import { ResizableBox } from 'react-resizable';
 import { getImageList } from '../utils/imageUtils';
 import MenuBar from './MenuBar';
 import 'react-resizable/css/styles.css';
+import { codeStyles, CodeStyleName } from '../styles/codeStyles';
+import { highlightCode } from '../utils/codeHighlight';
 
 export default function FrostedGlass() {
   const [images, setImages] = useState<Array<{ path: string; url: string; name: string }>>([]);
@@ -17,6 +19,7 @@ export default function FrostedGlass() {
   const [loading, setLoading] = useState(true);
   const [fontSize, setFontSize] = useState(24);
   const [textAlign, setTextAlign] = useState<'left' | 'center' | 'right'>('center');
+  const [codeStyle, setCodeStyle] = useState<CodeStyleName>('atom-one-dark');
   
   useEffect(() => {
     try {
@@ -82,6 +85,51 @@ export default function FrostedGlass() {
     setTextAlign(align);
   };
 
+  const handleCodeStyleChange = (style: CodeStyleName) => {
+    setCodeStyle(style);
+  };
+
+  const currentStyle = codeStyles[codeStyle];
+
+  // 处理代码显示
+  const renderCode = () => {
+    if (isEditing) {
+      return (
+        <textarea
+          value={text}
+          onChange={handleTextChange}
+          onBlur={handleEditComplete}
+          className="w-full h-full bg-transparent resize-none border-none focus:outline-none focus:ring-0 font-mono"
+          style={{ 
+            fontSize: `${fontSize}px`,
+            textAlign: textAlign,
+            color: currentStyle.text,
+            caretColor: currentStyle.text
+          }}
+          autoFocus
+          placeholder="输入你想要的代码..."
+          spellCheck={false}
+        />
+      );
+    }
+
+    return (
+      <div 
+        className="w-full h-full flex items-center justify-center cursor-text"
+        onClick={() => setIsEditing(true)}
+        style={{ textAlign: textAlign }}
+      >
+        <pre 
+          className="font-mono whitespace-pre-wrap break-words w-full"
+          style={{ fontSize: `${fontSize}px` }}
+          dangerouslySetInnerHTML={{ 
+            __html: highlightCode(text, currentStyle) 
+          }}
+        />
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen w-full relative overflow-hidden bg-black flex flex-col items-center justify-center p-4">
       <div className="w-4/5 relative rounded-xl overflow-hidden">
@@ -91,6 +139,8 @@ export default function FrostedGlass() {
             onFontSizeChange={handleFontSizeChange}
             textAlign={textAlign}
             onAlignChange={handleAlignChange}
+            codeStyle={codeStyle}
+            onCodeStyleChange={handleCodeStyleChange}
           />
         </div>
 
@@ -117,37 +167,7 @@ export default function FrostedGlass() {
                 <div className="absolute inset-0 backdrop-blur-md bg-white/10" />
                 
                 <div className="absolute inset-0 flex items-center justify-center p-8">
-                  {isEditing ? (
-                    <textarea
-                      value={text}
-                      onChange={handleTextChange}
-                      onBlur={handleEditComplete}
-                      className="w-full h-full bg-transparent text-white resize-none border-none focus:outline-none focus:ring-0"
-                      style={{ 
-                        fontSize: `${fontSize}px`,
-                        background: 'transparent',
-                        caretColor: 'white',
-                        textAlign: textAlign
-                      }}
-                      autoFocus
-                      placeholder="输入你想要的文字..."
-                    />
-                  ) : (
-                    <div 
-                      className="w-full h-full flex items-center justify-center cursor-text"
-                      onClick={() => setIsEditing(true)}
-                      style={{ textAlign: textAlign }}
-                    >
-                      <p className="text-white whitespace-pre-wrap break-words"
-                         style={{ 
-                           fontSize: `${fontSize}px`,
-                           textAlign: textAlign,
-                           width: '100%'  // 确保文本能够按照对齐方式排列
-                         }}>
-                        {text}
-                      </p>
-                    </div>
-                  )}
+                  {renderCode()}
                 </div>
               </div>
             </div>

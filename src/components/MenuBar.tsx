@@ -1,17 +1,22 @@
 import React from 'react';
+import { CodeStyleName } from '../styles/codeStyles';
 
 interface MenuBarProps {
   fontSize: number;
   onFontSizeChange: (size: number) => void;
   textAlign: 'left' | 'center' | 'right';
   onAlignChange: (align: 'left' | 'center' | 'right') => void;
+  codeStyle: CodeStyleName;
+  onCodeStyleChange: (style: CodeStyleName) => void;
 }
 
-export default function MenuBar({ 
-  fontSize, 
-  onFontSizeChange, 
-  textAlign, 
-  onAlignChange 
+export default function MenuBar({
+  fontSize,
+  onFontSizeChange,
+  textAlign,
+  onAlignChange,
+  codeStyle,
+  onCodeStyleChange
 }: MenuBarProps) {
   return (
     <div className="frosted-glass px-4 py-2 flex items-center gap-4">
@@ -52,6 +57,36 @@ export default function MenuBar({
         >
           右
         </button>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <span className="text-white text-sm">代码样式:</span>
+        <div className="flex gap-2">
+          <button
+            className={`px-3 py-1 rounded text-sm ${
+              codeStyle === 'atom-one-dark' ? 'bg-white/30' : 'bg-white/10'
+            } hover:bg-white/20 text-white transition-colors`}
+            onClick={() => onCodeStyleChange('atom-one-dark')}
+          >
+            Atom Dark
+          </button>
+          <button
+            className={`px-3 py-1 rounded text-sm ${
+              codeStyle === 'github' ? 'bg-white/30' : 'bg-white/10'
+            } hover:bg-white/20 text-white transition-colors`}
+            onClick={() => onCodeStyleChange('github')}
+          >
+            GitHub
+          </button>
+          <button
+            className={`px-3 py-1 rounded text-sm ${
+              codeStyle === 'dracula' ? 'bg-white/30' : 'bg-white/10'
+            } hover:bg-white/20 text-white transition-colors`}
+            onClick={() => onCodeStyleChange('dracula')}
+          >
+            Dracula
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -94,3 +94,20 @@
     @apply text-xs;
   }
 } 
+
+/* 代码编辑器样式 */
+.font-mono {
+  font-family: 'Fira Code', 'Consolas', 'Monaco', 'Andale Mono', monospace;
+}
+
+/* 代码高亮过渡效果 */
+pre span {
+  transition: color 0.2s ease;
+} 
+
+/* 代码高亮样式 */
+.code-token {
+  display: inline;
+  white-space: pre;
+  transition: color 0.2s ease;
+} 
